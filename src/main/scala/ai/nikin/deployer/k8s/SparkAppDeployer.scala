@@ -8,7 +8,7 @@ import com.coralogix.zio.k8s.model.pkg.apis.meta.v1.{DeleteOptions, Status}
 import zio.{Task, ZIO}
 import zio.stream.ZSink
 
-object SparkDeployer extends K8SDeployer [SparkApplications.Service, SparkApplication]{
+object SparkAppDeployer extends K8SDeployer [SparkApplications.Service, SparkApplication]{
   override def getAll(ns: model.K8sNamespace): ZIO[SparkApplications.Service, K8sFailure, List[SparkApplication]] = {
     val sink = ZSink.collectAllToSet[SparkApplication]
 
