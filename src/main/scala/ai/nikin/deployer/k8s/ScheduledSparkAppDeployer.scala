@@ -24,7 +24,7 @@ object ScheduledSparkAppDeployer extends K8SDeployer [ScheduledSparkApplications
   override def delete(ns: model.K8sNamespace, k8SResourceName: K8SResourceName): ZIO[ScheduledSparkApplications.Service, K8sFailure, Status] =
     scheduledsparkapplications.delete(k8SResourceName.name, DeleteOptions(None, None, None, None, None), ns)
 
-  override def create(ns: model.K8sNamespace, definition: ScheduledSparkApplication): ZIO[ScheduledSparkApplications.Service, K8sFailure, ScheduledSparkApplication] = {
+  override def create( definition: ScheduledSparkApplication, ns: model.K8sNamespace): ZIO[ScheduledSparkApplications.Service, K8sFailure, ScheduledSparkApplication] = {
     scheduledsparkapplications.create(definition, ns)
   }
 }

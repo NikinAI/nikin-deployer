@@ -23,7 +23,7 @@ object SparkAppDeployer extends K8SDeployer [SparkApplications.Service, SparkApp
   override def delete(ns: model.K8sNamespace, k8SResourceName: K8SResourceName): ZIO[SparkApplications.Service, K8sFailure, Status] =
     sparkapplications.delete(k8SResourceName.name, DeleteOptions(None, None, None, None, None), ns)
 
-  override def create(ns: model.K8sNamespace, definition: SparkApplication): ZIO[SparkApplications.Service, K8sFailure, SparkApplication] = {
+  override def create(definition: SparkApplication, ns: model.K8sNamespace): ZIO[SparkApplications.Service, K8sFailure, SparkApplication] = {
     sparkapplications.create(definition, ns)
   }
 }

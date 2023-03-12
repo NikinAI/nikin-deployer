@@ -10,5 +10,5 @@ trait K8SDeployer[S, T] {
   def getAll(ns: K8sNamespace): ZIO[S, K8sFailure, List[T]]
   def get(ns: K8sNamespace, k8SResourceName: K8SResourceName): ZIO[S, K8sFailure, T]
   def delete(ns: K8sNamespace, k8SResourceName: K8SResourceName): ZIO[S, K8sFailure, Status]
-  def create(ns: K8sNamespace, definition: T): ZIO[S, K8sFailure, T]
+  def create(definition: T, ns: K8sNamespace,): ZIO[S, K8sFailure, T]
 }
