@@ -1,4 +1,4 @@
-package ai.nikin.deployer.model
+package ai.nikin.deployer.deployment.model
 
 trait ResourceType
 object ResourceType {
