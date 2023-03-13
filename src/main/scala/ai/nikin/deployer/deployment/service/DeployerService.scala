@@ -1,15 +1,15 @@
-package ai.nikin.deployer.service
+package ai.nikin.deployer.deployment.service
 
-import ai.nikin.deployer.model.{K8sResource, K8SResourceName, ResourceType}
-import ai.nikin.deployer.model.K8sResource._
-import ai.nikin.deployer.model.ResourceType.{ConfigMap, Deployment, ScheduledSparkApp, Secret, Service, SparkApp}
+import ai.nikin.deployer.deployment.model.{K8SResourceName, K8sResource, ResourceType}
+import ai.nikin.deployer.deployment.model.ResourceType._
+import ai.nikin.deployer.deployment.model.K8sResource._
 import com.coralogix.zio.k8s.client.K8sFailure
 import com.coralogix.zio.k8s.client.apps.v1.deployments
 import com.coralogix.zio.k8s.client.apps.v1.deployments.Deployments
 import com.coralogix.zio.k8s.client.model.K8sNamespace
 import com.coralogix.zio.k8s.client.sparkoperator.v1beta2.scheduledsparkapplications.ScheduledSparkApplications
-import com.coralogix.zio.k8s.client.sparkoperator.v1beta2.{scheduledsparkapplications, sparkapplications}
 import com.coralogix.zio.k8s.client.sparkoperator.v1beta2.sparkapplications.SparkApplications
+import com.coralogix.zio.k8s.client.sparkoperator.v1beta2.{scheduledsparkapplications, sparkapplications}
 import com.coralogix.zio.k8s.client.v1.configmaps.ConfigMaps
 import com.coralogix.zio.k8s.client.v1.secrets.Secrets
 import com.coralogix.zio.k8s.client.v1.services.Services
