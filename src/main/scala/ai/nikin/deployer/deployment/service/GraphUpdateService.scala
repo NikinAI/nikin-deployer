@@ -34,10 +34,10 @@ class K8sGraphUpdateService(deployerService: DeployerService) extends GraphUpdat
     }
 
     ZIO.collectAll(deleteResult)
-      .onError(_ => ZIO.collectAll(deleteOperations.map(r => deployOpt(r.resource))))
+      .orElse(ZIO.collectAll(deleteOperations.map(r => deployOpt(r.resource))))
       .flatMap(_ =>
         ZIO.collectAll(createOperations.map(cr => deployerService.deploy(cr.resource)))
-          .onError(_ => ZIO.collectAll(createOperations.map(cr => deleteOpt(cr.resource))))
+          .orElse(ZIO.collectAll(createOperations.map(cr => deleteOpt(cr.resource))))
 
       )
   }
