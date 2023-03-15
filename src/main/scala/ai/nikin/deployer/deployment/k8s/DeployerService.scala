@@ -3,7 +3,7 @@ package ai.nikin.deployer.deployment.k8s
 import ai.nikin.deployer.deployment.model.K8sResource._
 import ai.nikin.deployer.deployment.model.ResourceType._
 import ai.nikin.deployer.deployment.model.{K8SResourceName, K8sResource, ResourceType}
-import com.coralogix.zio.k8s.client.K8sFailure
+import com.coralogix.zio.k8s.client.{K8sFailure, NamespacedResource}
 import com.coralogix.zio.k8s.client.K8sFailure.syntax.K8sZIOSyntax
 import com.coralogix.zio.k8s.client.apps.v1.deployments
 import com.coralogix.zio.k8s.client.apps.v1.deployments.Deployments
@@ -21,8 +21,10 @@ import zio.ZIO
 trait DeployerService {
   def deploy(resource: K8sResource): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Unit]
   def replace(updatedResource: K8sResource): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Unit]
-  def delete(name: K8SResourceName, namespace: K8sNamespace, resourceType: ResourceType): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Status]
-  def get(name: K8SResourceName, namespace: K8sNamespace, resourceType: ResourceType): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Option[K8sResource]]
+  def delete(resource: K8sResource): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Status]
+  def get[T: zio.Tag](name: K8SResourceName, namespace: K8sNamespace): ZIO[NamespacedResource[T], K8sFailure, Option[T]]
+  def get(resource: K8sResource): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Option[K8sResource]]
+
 }
 object LiveDeployerService extends DeployerService {
   override def replace(updatedResource: K8sResource): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Unit] = {
@@ -52,29 +54,43 @@ object LiveDeployerService extends DeployerService {
     case K8sScheduledSparkApp(app, ns, name) => scheduledsparkapplications.create(app, ns)
       .map(cm => K8sScheduledSparkApp(cm, ns, name))
   }
-  override def delete(name: K8SResourceName, namespace: K8sNamespace, resourceType: ResourceType): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Status] = resourceType match {
-    case Deployment => deployments.delete(name.value, DeleteOptions(), namespace)
-    case Service => services.delete(name.value, DeleteOptions(), namespace)
-    case ConfigMap => configmaps.delete(name.value, DeleteOptions(), namespace)
-    case Secret => secrets.delete(name.value, DeleteOptions(), namespace)
-    case SparkApp => sparkapplications.delete(name.value, DeleteOptions(), namespace)
-    case ScheduledSparkApp => scheduledsparkapplications.delete(name.value, DeleteOptions(), namespace)
+
+  override def delete(resource: K8sResource): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Status] = resource match {
+    case K8sDeployment(dep, ns, K8SResourceName(name)) => deployments.delete(name, DeleteOptions(), ns)
+    case K8sService(svc, ns, K8SResourceName(name)) => services.delete(name, DeleteOptions(), ns)
+    case K8sConfigMap(cm, ns, K8SResourceName(name)) => configmaps.delete(name, DeleteOptions(), ns)
+    case K8sSecret(s, ns, K8SResourceName(name)) => secrets.delete(name, DeleteOptions(), ns)
+    case K8sSparkApp(app, ns, K8SResourceName(name)) => sparkapplications.delete(name, DeleteOptions(), ns)
+    case K8sScheduledSparkApp(app, ns, K8SResourceName(name)) => scheduledsparkapplications.delete(name, DeleteOptions(), ns)
   }
 
-  override def get(name: K8SResourceName, namespace: K8sNamespace, resourceType: ResourceType): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Option[K8sResource]] = resourceType match {
-      case Deployment => deployments.get(name.value, namespace)
-        .map(d => K8sDeployment(d, namespace, name)).ifFound
-      case Service => services.get(name.value, namespace)
-        .map(s => K8sService(s, namespace, name)).ifFound
-      case ConfigMap => configmaps.get(name.value, namespace)
-        .map(cm => K8sConfigMap(cm, namespace, name)).ifFound
-      case Secret => secrets.get(name.value, namespace)
-        .map(s => K8sSecret(s, namespace, name)).ifFound
-      case SparkApp => sparkapplications.get(name.value, namespace)
-        .map(app => K8sSparkApp(app, namespace, name)).ifFound
-      case ScheduledSparkApp => scheduledsparkapplications.get(name.value, namespace)
-        .map(app => K8sScheduledSparkApp(app, namespace, name)).ifFound
-    }
+
+  override def get[T : zio.Tag](name: K8SResourceName, namespace: K8sNamespace): ZIO[NamespacedResource[T], K8sFailure, Option[T]] =
+    for {
+      svc <- ZIO.service[NamespacedResource[T]]
+      result <- svc.get(name.value, namespace).ifFound
+    } yield(result)
+
+  override def get(resource: K8sResource): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Option[K8sResource]] = resource match {
+    case K8sDeployment(_, ns, name) => deployments.get(name.value, ns)
+      .map(d => K8sDeployment(d, ns, name))
+      .ifFound
+    case K8sService(_, ns, name) => services.get(name.value, ns)
+      .map(s => K8sService(s, ns, name))
+      .ifFound
+    case K8sConfigMap(_, ns, name) => configmaps.get(name.value, ns)
+      .map(cm => K8sConfigMap(cm, ns, name))
+      .ifFound
+    case K8sSecret(_, ns, name) => secrets.get(name.value, ns)
+      .map(s => K8sSecret(s, ns, name))
+      .ifFound
+    case K8sSparkApp(_, ns, name) => sparkapplications.get(name.value, ns)
+      .map(app => K8sSparkApp(app, ns, name))
+      .ifFound
+    case K8sScheduledSparkApp(_, ns, name) => scheduledsparkapplications.get(name.value, ns)
+      .map(cm => K8sScheduledSparkApp(cm, ns, name))
+    .ifFound
+  }
 }
 
 

@@ -11,25 +11,12 @@ case class K8SResourceName(value: String)
 sealed trait K8sResource{
   val name: K8SResourceName
   val namespace: K8sNamespace
-  val resourceType: ResourceType
 }
 object K8sResource  {
-  case class K8sService(svc: Service, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource {
-    override val resourceType: ResourceType = ResourceType.Service
-  }
-  case class K8sConfigMap(cm: ConfigMap, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource {
-    override val resourceType: ResourceType = ResourceType.ConfigMap
-  }
-  case class K8sDeployment(dep: Deployment, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource {
-    override val resourceType: ResourceType = ResourceType.Deployment
-  }
-  case class K8sSparkApp(app: SparkApplication, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource {
-    override val resourceType: ResourceType = SparkApp
-  }
-  case class K8sScheduledSparkApp(app: ScheduledSparkApplication, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource {
-    override val resourceType: ResourceType = ScheduledSparkApp
-  }
-  case class K8sSecret(secret: Secret, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource {
-    override val resourceType: ResourceType = ResourceType.Secret
-  }
+  case class K8sService(svc: Service, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource
+  case class K8sConfigMap(cm: ConfigMap, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource
+  case class K8sDeployment(dep: Deployment, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource
+  case class K8sSparkApp(app: SparkApplication, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource
+  case class K8sScheduledSparkApp(app: ScheduledSparkApplication, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource
+  case class K8sSecret(secret: Secret, override val namespace: K8sNamespace, override val name: K8SResourceName) extends K8sResource
 }

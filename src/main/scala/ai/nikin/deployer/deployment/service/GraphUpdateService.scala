@@ -30,7 +30,7 @@ class K8sGraphUpdateService(deployerService: DeployerService) extends GraphUpdat
     }
 
     val deleteResult = deleteOperations.map {
-      case k8s.Delete(rsc) => deployerService.delete(rsc.name, rsc.namespace, rsc.resourceType)
+      case k8s.Delete(rsc) => deployerService.delete(rsc)
     }
 
     ZIO.collectAll(deleteResult)
@@ -44,7 +44,7 @@ class K8sGraphUpdateService(deployerService: DeployerService) extends GraphUpdat
 
   private def deployOpt(resource: K8sResource) = {
     deployerService
-      .get(resource.name, resource.namespace, resource.resourceType)
+      .get(resource)
       .flatMap{
         case Some(_) => ZIO.unit
         case None => deployerService.deploy(resource).unit
@@ -53,9 +53,9 @@ class K8sGraphUpdateService(deployerService: DeployerService) extends GraphUpdat
 
   private def deleteOpt(resource: K8sResource) = {
     deployerService
-      .get(resource.name, resource.namespace, resource.resourceType)
+      .get(resource)
       .flatMap {
-        case Some(_) => deployerService.delete(resource.name, resource.namespace, resource.resourceType).unit
+        case Some(_) => deployerService.delete(resource).unit
         case None => ZIO.unit
       }
   }
