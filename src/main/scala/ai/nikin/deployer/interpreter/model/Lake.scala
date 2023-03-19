@@ -10,13 +10,22 @@ object AggFunction {
   case object Avg extends AggFunction
 }
 
+
+case class
+case class DDL(value: String) extends AnyVal
 case class Schema(name: String, avroSchema: AvroSchema)
-case class Lake(name: String, schema: Schema) extends Definition
+case class Lake(name: String, schema: Schema, ddl: DDL) extends Definition
 case class SparkApplication(
                            name: String,
-                           inputLake: String,
-                           outputLake: String,
+                           inputLocation: String,
+                           outputLocation: String,
                            function: AggFunction,
                            inputColName: String,
                            outputColName: String
                            ) extends Definition
+
+case class Table(
+                name: String,
+                schema: Schema,
+                ddl: DDL
+                ) extends Definition
