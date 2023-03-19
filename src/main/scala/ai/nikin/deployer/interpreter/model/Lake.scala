@@ -11,12 +11,16 @@ object AggFunction {
 }
 
 
-case class
+
+case class JAR(location: String, version: Version)
+case class Version(version: String) extends AnyVal
 case class DDL(value: String) extends AnyVal
 case class Schema(name: String, avroSchema: AvroSchema)
 case class Lake(name: String, schema: Schema, ddl: DDL) extends Definition
+
 case class SparkApplication(
                            name: String,
+                           jar: JAR,
                            inputLocation: String,
                            outputLocation: String,
                            function: AggFunction,
