@@ -1,5 +1,7 @@
 package ai.nikin.deployer.delta.repository
 
-trait DeltaRepository {
+import ai.nikin.deployer.interpreter.model.InterpretedGraph
 
+trait DeltaRepository {
+  def getGraph(graphName: String): Option[InterpretedGraph]
 }
