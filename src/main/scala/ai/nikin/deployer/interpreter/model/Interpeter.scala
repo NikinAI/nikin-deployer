@@ -2,7 +2,7 @@ package ai.nikin.deployer.interpreter.model
 
 trait JsonGraph
 trait Definition
-trait InterpretedGraph{
+trait InterpretedGraph {
   val name: String
   val definitions: Map[String, Definition]
 }

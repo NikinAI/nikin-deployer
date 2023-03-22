@@ -1,7 +1,6 @@
 package ai.nikin.deployer.deployment.model
 
-import ai.nikin.deployer.interpreter.model.DDL
-import com.coralogix.zio.k8s.client.model.K8sNamespace
+import ai.nikin.deployer.interpreter.model.{DDL, JAR}
 
 trait NodeType
 case class LakeNode(name: String, ddl: DDL) extends NodeType
