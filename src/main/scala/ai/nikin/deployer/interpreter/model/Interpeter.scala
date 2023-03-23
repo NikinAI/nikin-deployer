@@ -2,11 +2,11 @@ package ai.nikin.deployer.interpreter.model
 
 trait JsonGraph
 trait Definition
-trait InterpretedGraph {
+trait InterpretedPipeline {
   val name: String
   val definitions: Map[String, Definition]
 }
 trait Interpreter {
-  def interpret(jsonGraph: JsonGraph): InterpretedGraph
+  def interpret(jsonGraph: JsonGraph): InterpretedPipeline
 
 }
