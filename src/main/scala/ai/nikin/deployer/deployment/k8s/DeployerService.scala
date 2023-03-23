@@ -1,9 +1,7 @@
 package ai.nikin.deployer.deployment.k8s
 
 import ai.nikin.deployer.deployment.model.K8sResource._
-import ai.nikin.deployer.deployment.model.ResourceType._
-import ai.nikin.deployer.deployment.model.{K8SResourceName, K8sResource, ResourceType}
-import com.coralogix.zio.k8s.client.{K8sFailure, NamespacedResource}
+import ai.nikin.deployer.deployment.model.{K8SResourceName, K8sResource}
 import com.coralogix.zio.k8s.client.K8sFailure.syntax.K8sZIOSyntax
 import com.coralogix.zio.k8s.client.apps.v1.deployments
 import com.coralogix.zio.k8s.client.apps.v1.deployments.Deployments
@@ -15,6 +13,7 @@ import com.coralogix.zio.k8s.client.v1.configmaps.ConfigMaps
 import com.coralogix.zio.k8s.client.v1.secrets.Secrets
 import com.coralogix.zio.k8s.client.v1.services.Services
 import com.coralogix.zio.k8s.client.v1.{configmaps, secrets, services}
+import com.coralogix.zio.k8s.client.{K8sFailure, NamespacedResource}
 import com.coralogix.zio.k8s.model.pkg.apis.meta.v1.{DeleteOptions, Status}
 import zio.ZIO
 

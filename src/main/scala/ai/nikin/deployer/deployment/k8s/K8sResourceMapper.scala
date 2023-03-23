@@ -9,7 +9,7 @@ trait K8sResourceUpdate{
 case class Create(override val resource: K8sResource) extends K8sResourceUpdate
 case class Delete(override val resource: K8sResource) extends K8sResourceUpdate
 object K8sResourceMapper {
-  //In case of SparkApps, ScheduledSparkApps and potentiall other stateful resources, the Update will be translated to Seq(Delete(), Create())
+  //In case of SparkApps, ScheduledSparkApps and potentially other stateful resources, the Update will be translated to Seq(Delete(), Create())
   // to avoid problems and make sure everything is correctly propagated.
   def mapToResources(nodeType: NodeType):Seq[K8sResourceUpdate] = ???
 }

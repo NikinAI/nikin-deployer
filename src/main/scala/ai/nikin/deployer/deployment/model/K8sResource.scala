@@ -1,6 +1,5 @@
 package ai.nikin.deployer.deployment.model
 
-import ai.nikin.deployer.deployment.model.ResourceType.{ScheduledSparkApp, SparkApp}
 import com.coralogix.zio.k8s.client.model.K8sNamespace
 import com.coralogix.zio.k8s.client.sparkoperator.definitions.scheduledsparkapplication.v1beta2.ScheduledSparkApplication
 import com.coralogix.zio.k8s.client.sparkoperator.definitions.sparkapplication.v1beta2.SparkApplication
