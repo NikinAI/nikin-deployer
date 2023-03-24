@@ -8,5 +8,4 @@ trait InterpretedPipeline {
 }
 trait Interpreter {
   def interpret(jsonGraph: JsonGraph): InterpretedPipeline
-
 }
