@@ -13,49 +13,49 @@ import com.coralogix.zio.k8s.client.v1.services.Services
 import zio.ZIO
 
 trait PipelineUpdateService {
-  def udpatePipeline(pipelineUpdate: Seq[NodeUpdate[NodeType]]): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Seq[Unit]]
+  def udpatePipeline(
+      pipelineUpdate: Seq[NodeUpdate[NodeType]]
+  ): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Seq[Unit]]
 }
 
 class K8sPipelineUpdateService(deployerService: DeployerService) extends PipelineUpdateService {
-  override def udpatePipeline(pipelineUpdate: Seq[NodeUpdate[NodeType]]): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Seq[Unit]] = {
-    val resourceUpdates = pipelineUpdate
-      .flatMap(nU => K8sResourceMapper.mapToResources(nU.resource))
+  override def udpatePipeline(
+      pipelineUpdate: Seq[NodeUpdate[NodeType]]
+  ): ZIO[Services with Deployments with ConfigMaps with SparkApplications with ScheduledSparkApplications with Secrets, K8sFailure, Seq[Unit]] = {
+    val resourceUpdates =
+      pipelineUpdate.flatMap(nU => K8sResourceMapper.mapToResources(nU.resource))
 
-    val (deleteOperations, createOperations) = resourceUpdates.partition {
-      case _: k8s.Delete => true
-      case _ => false
-    }
+    val (deleteOperations, createOperations) =
+      resourceUpdates.partition {
+        case _: k8s.Delete => true
+        case _ => false
+      }
 
-    val deleteResult = deleteOperations.map {
-      case k8s.Delete(rsc) => deployerService.delete(rsc)
-    }
+    val deleteResult = deleteOperations.map { case k8s.Delete(rsc) => deployerService.delete(rsc) }
 
-    ZIO.collectAll(deleteResult)
+    ZIO
+      .collectAll(deleteResult)
       .orElse(ZIO.collectAll(deleteOperations.map(r => deployOpt(r.resource))))
       .flatMap(_ =>
-        ZIO.collectAll(createOperations.map(cr => deployerService.deploy(cr.resource)))
+        ZIO
+          .collectAll(createOperations.map(cr => deployerService.deploy(cr.resource)))
           .orElse(ZIO.collectAll(createOperations.map(cr => deleteOpt(cr.resource))))
-
       )
   }
 
-  private def deployOpt(resource: K8sResource) = {
+  private def deployOpt(resource: K8sResource) =
     deployerService
       .get(resource)
-      .flatMap{
+      .flatMap {
         case Some(_) => ZIO.unit
-        case None => deployerService.deploy(resource).unit
+        case None    => deployerService.deploy(resource).unit
       }
-  }
 
-  private def deleteOpt(resource: K8sResource) = {
+  private def deleteOpt(resource: K8sResource) =
     deployerService
       .get(resource)
       .flatMap {
         case Some(_) => deployerService.delete(resource).unit
-        case None => ZIO.unit
+        case None    => ZIO.unit
       }
-  }
-
-
 }
