@@ -9,13 +9,14 @@ lazy val root = (project in file("."))
 
 
 libraryDependencies ++= Dependencies.deps
-externalCustomResourceDefinitions :=
-  Seq(
-    file("crds/sparkoperator.k8s.io_scheduledsparkapplications.yaml"),
-    file("crds/s3.aws.crossplane.io_buckets.yaml"),
-    file("crds/s3.aws.crossplane.io_bucketpolicies.yaml"),
-    file("crds/sparkoperator.k8s.io_sparkapplications.yaml")
-  )
+externalCustomResourceDefinitions := Seq(
+  file("crds/sparkoperator.k8s.io_scheduledsparkapplications.yaml"),
+  file("crds/s3.aws.crossplane.io_buckets.yaml"),
+  file("crds/s3.aws.crossplane.io_bucketpolicies.yaml"),
+  file("crds/rds.aws.upbound.io_clusters.yaml"),
+  file("crds/sparkoperator.k8s.io_sparkapplications.yaml"),
+
+)
 
 enablePlugins(K8sCustomResourceCodegenPlugin)
 addCommandAlias("runScalafmt", ";scalafmt;scalafmtSbt")
