@@ -19,6 +19,7 @@ object Dependencies {
   lazy val zioK8sClient = "com.coralogix" %% "zio-k8s-client" % Versions.zioK8sVersion
   lazy val avro = "org.apache.avro" % "avro" % Versions.avroVersion
   lazy val nikinSdk = "ai.nikin" %% "pipeline-sdk" % Versions.nikinCoreVersion
+  lazy val zioOptics = "com.coralogix" %% "zio-k8s-client-quicklens" % Versions.zioK8sVersion
 
   lazy val deps = Seq(
     core,
