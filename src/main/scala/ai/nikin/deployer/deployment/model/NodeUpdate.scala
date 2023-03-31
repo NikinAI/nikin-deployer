@@ -4,9 +4,9 @@ import ai.nikin.deployer.interpreter.model.{DDL, JAR}
 
 trait NodeType
 case class LakeNode(name: String, ddl: DDL) extends NodeType
-case class HttpService(address: Int) extends NodeType
-case class SparkApplication(jarLocation: String) extends NodeType
-case class ScheduledSparkApplication(jarLocation: String) extends NodeType
+case class HttpService(name: String, address: Int) extends NodeType
+case class SparkApplication(name: String, jar: JAR) extends NodeType
+case class ScheduledSparkApplication(name: String, jar: JAR) extends NodeType
 trait NodeUpdate[T <: NodeType] {
   val resource: T
 }
