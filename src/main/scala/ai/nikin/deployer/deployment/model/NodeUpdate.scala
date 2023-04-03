@@ -6,7 +6,7 @@ trait NodeType
 case class LakeNode(name: String, ddl: DDL) extends NodeType
 case class HttpService(name: String, address: Int) extends NodeType
 case class SparkApplication(name: String, jar: JAR) extends NodeType
-case class ScheduledSparkApplication(name: String, jar: JAR) extends NodeType
+case class ScheduledSparkApplication(name: String, jar: JAR, schedule: String) extends NodeType
 trait NodeUpdate[T <: NodeType] {
   val resource: T
 }
