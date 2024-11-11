@@ -79,7 +79,7 @@ object LiveDeployerService extends DeployerService {
     resource match {
       case K8sDeployment(dep, ns, K8SResourceName(name))        => deployments
           .delete(name, DeleteOptions(), ns)
-      case K8sService(svc, ns, K8SResourceName(name))           => services.delete(name, DeleteOptions(), ns)
+      case K8sService(svc, ns, K8SResourceName(name))           => services.delete(name, DeleteOptions(), ns).map(_ => Status()) // TODO review workaround
       case K8sConfigMap(cm, ns, K8SResourceName(name))          => configmaps
           .delete(name, DeleteOptions(), ns)
       case K8sSecret(s, ns, K8SResourceName(name))              => secrets.delete(name, DeleteOptions(), ns)

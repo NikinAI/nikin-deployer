@@ -3,7 +3,7 @@ package ai.nikin.deployer.infra.model
 import com.coralogix.zio.k8s.client.io.upbound.aws.kms.definitions.key.v1beta1.Key
 import com.coralogix.zio.k8s.client.io.upbound.aws.rds.definitions.instance.v1beta1.Instance
 import com.coralogix.zio.k8s.client.io.upbound.aws.s3.definitions.bucket.v1beta1.Bucket
-import com.coralogix.zio.k8s.client.io.upbound.aws.s3.definitions.bucketacl.v1beta1.BucketAcl
+//import com.coralogix.zio.k8s.client.io.upbound.aws.s3.definitions.bucketacl.v1beta1.BucketAcl TODO
 import com.coralogix.zio.k8s.client.io.upbound.aws.s3.definitions.bucketpublicaccessblock.v1beta1.BucketPublicAccessBlock
 import com.coralogix.zio.k8s.model.core.v1.Secret
 import io.circe.yaml.parser.parse

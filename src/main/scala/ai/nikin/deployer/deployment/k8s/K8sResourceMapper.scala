@@ -20,7 +20,7 @@ object K8sResourceMapper {
       case SparkApplication(name, jar) =>
         val defaultApp = K8sSparkApplication.defaultApp
           .modify(_.metadata.name.each).setTo(name)
-          .modify(_.spec.mainApplicationFile.each).setTo(jar.location)
+          .modify(_.spec.mainApplicationFile).setTo(jar.location)
         Seq(
           Delete(K8sSparkApp(defaultApp, K8sNamespace("default"), K8SResourceName(name))),
           Create(K8sSparkApp(defaultApp, K8sNamespace("default"), K8SResourceName(name)))
