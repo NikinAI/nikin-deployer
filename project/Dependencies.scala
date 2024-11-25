@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   object Versions {
-    lazy val zioCoreVersion   = "2.1.12"
+    lazy val zioCoreVersion   = "2.1.13"
     lazy val zioK8sVersion    = "3.1.0"
     lazy val sttpVersion      = "3.10.1"
     lazy val avroVersion      = "1.12.0"
