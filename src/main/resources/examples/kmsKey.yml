@@ -1,0 +1,13 @@
+apiVersion: kms.aws.upbound.io/v1beta1
+kind: Key
+metadata:
+  annotations:
+    meta.upbound.io/example-id: rds/v1beta1/instance
+  labels:
+    testing.upbound.io/example-name: sample-key
+  name: sample-key-test
+spec:
+  forProvider:
+    region: us-west-1
+    description: Created with Crossplane
+    deletionWindowInDays: 7
